@@ -15,7 +15,13 @@ async function detectDevice() {
 
     return new Promise((resolve, reject) => {
 
-        const browser = mdns.createBrowser(mdns.tcp('googlecast'));
+        const sequence = [
+            mdns.rst.DNSServiceResolve(),
+            'DNSServiceGetAddrInfo' in mdns.dns_sd ? mdns.rst.DNSServiceGetAddrInfo() : mdns.rst.getaddrinfo({ families: [4] }),
+            mdns.rst.makeAddressesUnique()
+        ];
+
+        const browser = mdns.createBrowser(mdns.tcp('googlecast'), {resolverSequence: sequence});
 
         browser.on('serviceUp', function (service) {
             console.log(`found device "${service.name}" at ${service.addresses[0]}:${service.port}`);
