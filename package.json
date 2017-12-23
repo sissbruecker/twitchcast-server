@@ -1,0 +1,19 @@
+{
+  "name": "twitchcast-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "castv2-client": "^1.2.0",
+    "express": "^4.16.2",
+    "mdns": "^2.3.4",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
+  }
+}
