@@ -15,6 +15,8 @@ async function detectDevice() {
 
     return new Promise((resolve, reject) => {
 
+        // Using a custom resolver sequence should fix error on debian systems
+        // https://stackoverflow.com/questions/29589543/raspberry-pi-mdns-getaddrinfo-3008-error
         const sequence = [
             mdns.rst.DNSServiceResolve(),
             'DNSServiceGetAddrInfo' in mdns.dns_sd ? mdns.rst.DNSServiceGetAddrInfo() : mdns.rst.getaddrinfo({ families: [4] }),
