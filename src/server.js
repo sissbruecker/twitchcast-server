@@ -1,13 +1,17 @@
 const express = require('express');
 const http = require('http');
+const bodyparser = require('body-parser');
 
 const getSteamInfo = require('./api/getStreamInfo');
 const player = require('./player');
+const browser = require('./browser');
 const Quality = require('./constants/quality');
 const Layout = require('./constants/layout');
 
 const app = express();
 let server;
+
+app.use(bodyparser.json());
 
 app.post('/stream/play/:channelId', async (req, res) => {
 
@@ -59,6 +63,24 @@ app.post('/stream/stop', async (req, res) => {
     res.status(200);
     res.json({
         message: 'Stopped Twitchcast app'
+    });
+});
+
+app.post('/browse', async (req, res) => {
+    try {
+        await browser.browse(req.body);
+    } catch (e) {
+        console.error(e);
+        res.status(500);
+        return res.json({
+            message: 'Could not start browser',
+            error: e
+        });
+    }
+
+    res.status(200);
+    res.json({
+        message: 'Started browser'
     });
 });
 
