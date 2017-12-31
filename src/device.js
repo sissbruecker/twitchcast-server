@@ -26,6 +26,9 @@ async function detectDevice() {
 
         browser.on('serviceUp', function (service) {
             console.log(`found device "${service.name}" at ${service.addresses[0]}:${service.port}`);
+
+            if (service.name.indexOf('Chromecast') < 0) return;
+
             currentDevice = service.addresses[0];
             resolve(currentDevice);
             browser.stop();
@@ -56,6 +59,7 @@ async function connect() {
             activeClient = client;
 
             client.once('error', disposeClient);
+            client.client.once('close', disposeClient);
 
             resolve(client);
         });
