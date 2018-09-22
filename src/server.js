@@ -5,6 +5,7 @@ const bodyparser = require('body-parser');
 const getSteamInfo = require('./api/getStreamInfo');
 const player = require('./player');
 const browser = require('./browser');
+const embed = require('./embed');
 const Quality = require('./constants/quality');
 const Layout = require('./constants/layout');
 
@@ -81,6 +82,28 @@ app.post('/browse', async (req, res) => {
     res.status(200);
     res.json({
         message: 'Started browser'
+    });
+});
+
+app.post('/stream/embed/:channelId', async (req, res) => {
+
+    const channelId = req.params.channelId;
+
+    try {
+        await embed.load(channelId);
+    } catch (e) {
+        console.error(e);
+        res.status(500);
+        return res.json({
+            message: 'Could not start stream on Chromecast',
+            error: e
+        });
+    }
+
+    res.status(200);
+    res.json({
+        message: 'Playing channel',
+        channel: channelId
     });
 });
 
