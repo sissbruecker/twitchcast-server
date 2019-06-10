@@ -2,70 +2,13 @@ const express = require('express');
 const http = require('http');
 const bodyparser = require('body-parser');
 
-const getSteamInfo = require('./api/getStreamInfo');
-const player = require('./player');
 const browser = require('./browser');
 const embed = require('./embed');
-const Quality = require('./constants/quality');
-const Layout = require('./constants/layout');
 
 const app = express();
 let server;
 
 app.use(bodyparser.json());
-
-app.post('/stream/play/:channelId', async (req, res) => {
-
-    const channelId = req.params.channelId;
-
-    let streamInfo;
-    try {
-        streamInfo = await getSteamInfo(channelId, Quality.SINGLE_HD);
-    } catch (e) {
-        console.error(e);
-        res.status(500);
-        return res.json({
-            message: 'Could not load stream info',
-            error: e
-        });
-    }
-
-    try {
-        await player.play(streamInfo, Layout.CHAT_LEFT);
-    } catch (e) {
-        console.error(e);
-        res.status(500);
-        return res.json({
-            message: 'Could not start stream on Chromecast',
-            error: e
-        });
-    }
-
-    res.status(200);
-    res.json({
-        message: 'Playing channel',
-        channel: channelId
-    });
-});
-
-app.post('/stream/stop', async (req, res) => {
-
-    try {
-        await player.stop();
-    } catch (e) {
-        console.error(e);
-        res.status(500);
-        return res.json({
-            message: 'Could not stop app',
-            error: e
-        });
-    }
-
-    res.status(200);
-    res.json({
-        message: 'Stopped Twitchcast app'
-    });
-});
 
 app.post('/browse', async (req, res) => {
     try {
@@ -85,12 +28,12 @@ app.post('/browse', async (req, res) => {
     });
 });
 
-app.post('/stream/embed/:channelId', async (req, res) => {
+app.post('/stream/channel/:channelId', async (req, res) => {
 
     const channelId = req.params.channelId;
 
     try {
-        await embed.load(channelId);
+        await embed.playChannel(channelId);
     } catch (e) {
         console.error(e);
         res.status(500);
@@ -104,6 +47,47 @@ app.post('/stream/embed/:channelId', async (req, res) => {
     res.json({
         message: 'Playing channel',
         channel: channelId
+    });
+});
+
+app.post('/stream/channel/:channelId/latestVideo', async (req, res) => {
+
+    const channelId = req.params.channelId;
+
+    try {
+        await embed.playLatestVideo(channelId);
+    } catch (e) {
+        console.error(e);
+        res.status(500);
+        return res.json({
+            message: 'Could not start stream on Chromecast',
+            error: e
+        });
+    }
+
+    res.status(200);
+    res.json({
+        message: 'Playing latest video',
+        channel: channelId
+    });
+});
+
+app.post('/stream/stop', async (req, res) => {
+
+    try {
+        await embed.stop();
+    } catch (e) {
+        console.error(e);
+        res.status(500);
+        return res.json({
+            message: 'Could not stop app',
+            error: e
+        });
+    }
+
+    res.status(200);
+    res.json({
+        message: 'Stopped Twitch app'
     });
 });
 
