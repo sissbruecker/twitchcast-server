@@ -21,8 +21,8 @@ TwitchEmbed.APP_ID = '58A6790E';
 
 util.inherits(TwitchEmbed, Application);
 
-TwitchEmbed.prototype.load = function (embedData, options, callback) {
-    this.controller.load.apply(this.controller, arguments);
+TwitchEmbed.prototype.sendCommand = function (command, options, callback) {
+    this.controller.sendCommand.apply(this.controller, arguments);
 };
 
 module.exports = TwitchEmbed;

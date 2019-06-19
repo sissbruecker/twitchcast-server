@@ -14,9 +14,9 @@ function TwitchEmbedController(client, sourceId, destinationId) {
 
 util.inherits(TwitchEmbedController, RequestResponseController);
 
-TwitchEmbedController.prototype.load = function (embedData, options, callback) {
+TwitchEmbedController.prototype.sendCommand = function (command, options, callback) {
 
-    this.request(embedData, function (err) {
+    this.request(command, function (err) {
         if (err) return callback(err);
         callback(null);
     });

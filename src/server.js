@@ -72,6 +72,27 @@ app.post('/stream/channel/:channelId/latestVideo', async (req, res) => {
     });
 });
 
+app.post('/stream/seek', async (req, res) => {
+
+    const minutes = req.params.minutes;
+
+    try {
+        await embed.seekTo(minutes);
+    } catch (e) {
+        console.error(e);
+        res.status(500);
+        return res.json({
+            message: 'Error executing seek',
+            error: e
+        });
+    }
+
+    res.status(200);
+    res.json({
+        message: `Seek to ${minutes} minutes`
+    });
+});
+
 app.post('/stream/stop', async (req, res) => {
 
     try {

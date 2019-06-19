@@ -5,13 +5,13 @@ const twitch = require('./api/twitch');
 
 async function playChannel(channel) {
     const embedApp = await device.getApp(TwitchEmbed);
-    const embedLoad = promisify(embedApp.load.bind(embedApp));
+    const sendCommand = promisify(embedApp.sendCommand.bind(embedApp));
     const command = {
         type: 'playChannel',
         channel
     };
 
-    await embedLoad(command, {});
+    await sendCommand(command, {});
 }
 
 async function playLatestVideo(channel) {
@@ -24,13 +24,25 @@ async function playLatestVideo(channel) {
     if (!video) return;
 
     const embedApp = await device.getApp(TwitchEmbed);
-    const embedLoad = promisify(embedApp.load.bind(embedApp));
+    const sendCommand = promisify(embedApp.sendCommand.bind(embedApp));
     const command = {
         type: 'playVideo',
         video: video.videoId
     };
 
-    await embedLoad(command, {});
+    await sendCommand(command, {});
+}
+
+async function seekTo(minutes) {
+    const seconds = minutes * 60;
+    const embedApp = await device.getApp(TwitchEmbed);
+    const sendCommand = promisify(embedApp.sendCommand.bind(embedApp));
+    const command = {
+        type: 'seek',
+        timestamp: seconds
+    };
+
+    await sendCommand(command, {});
 }
 
 async function stop() {
@@ -48,5 +60,6 @@ async function stop() {
 module.exports = {
     playChannel,
     playLatestVideo,
+    seekTo,
     stop
 };
