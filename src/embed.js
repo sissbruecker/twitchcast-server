@@ -39,7 +39,7 @@ async function seekTo(minutes) {
     const sendCommand = promisify(embedApp.sendCommand.bind(embedApp));
     const command = {
         type: 'seek',
-        timestamp: seconds
+        time: seconds
     };
 
     await sendCommand(command, {});

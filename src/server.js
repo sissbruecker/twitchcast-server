@@ -72,7 +72,7 @@ app.post('/stream/channel/:channelId/latestVideo', async (req, res) => {
     });
 });
 
-app.post('/stream/seek', async (req, res) => {
+app.post('/stream/seek/:minutes', async (req, res) => {
 
     const minutes = req.params.minutes;
 
